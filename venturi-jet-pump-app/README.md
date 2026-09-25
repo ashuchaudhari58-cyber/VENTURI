@@ -1,5 +1,7 @@
 # Venturi Jet Pump Design Studio
 
+**Live:** [ashuchaudhari58-cyber.github.io/VENTURI](https://ashuchaudhari58-cyber.github.io/VENTURI/)
+
 A browser-based engineering application for sizing, verifying and documenting **Venturi jet pumps (ejectors)** in **MTBM slurry circuits**. The calculation model is a verified, cell-by-cell port of `VENTURI_JET_PUMP_CALCULATOR_v4.xlsx`; the interface is organised as an engineering workflow in which inputs, results, dimensioned geometry, flow visualization, hydraulic profiles, validation and the report all read **one authoritative design state**.
 
 > The spreadsheet is the authoritative computational model. The engine reproduces it exactly (82 / 82 regression values) and is not modified by the user interface. See [Verification](#verification).
