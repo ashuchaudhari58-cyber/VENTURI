@@ -1,11 +1,13 @@
 name: Deploy to GitHub Pages
 
-# Publishes the static app to GitHub Pages on every push to main.
-# No build step required — the app is plain HTML/CSS/JS (classic scripts).
+# Publishes venturi-jet-pump-app/ to GitHub Pages on every push to main that
+# touches it. No build step required — the app is plain HTML/CSS/JS (classic
+# scripts); index.html lives in that subfolder, not the repo root.
 
 on:
   push:
     branches: [main]
+    paths: ['venturi-jet-pump-app/**']
   workflow_dispatch:
 
 permissions:
@@ -29,6 +31,6 @@ jobs:
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'          # serve the repository root (index.html at root)
+          path: 'venturi-jet-pump-app'   # index.html lives in this subfolder
       - id: deployment
         uses: actions/deploy-pages@v4

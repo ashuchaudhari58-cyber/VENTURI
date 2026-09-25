@@ -141,9 +141,9 @@ Open `tests/tests.html` (85 / 85 checks pass):
 
 ## Deploy to GitHub Pages
 
-1. Create a GitHub repository and copy the **contents** of this folder to its root (so `index.html` is at the root); push to `main`.
+1. Push this repository to GitHub (this folder, `venturi-jet-pump-app/`, is a subfolder of the repo; the workflow builds the Pages site from it).
 2. In the repository: **Settings → Pages → Build and deployment → Source = GitHub Actions**.
-3. `.github/workflows/deploy.yml` publishes the site on every push to `main`.
+3. `.github/workflows/deploy.yml` (at the repo root) publishes `venturi-jet-pump-app/` on every push to `main` that touches it.
 
 All paths are relative, so the app also works from a project sub-path (`https://<user>.github.io/<repo>/`). `.nojekyll` makes Pages serve the files verbatim. Saved projects live in each visitor's own browser.
 
