@@ -1,0 +1,81 @@
+/* ============================================================================
+ * Engineering report — A4 preview on screen and print / "Save as PDF".
+ * Always light paper with the orange/amber brand accent; vector content only.
+ * ========================================================================== */
+.report-root { position: fixed; inset: 0; z-index: 700; background: #394150; display: flex; flex-direction: column; }
+.report-root[hidden] { display: none; }
+.rp-bar { display: flex; align-items: center; gap: 14px; padding: 10px 16px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; color: var(--text); }
+.rp-bar-t { font-size: 14px; margin-right: 6px; }
+.rp-bar .tb-sp { flex: 1; }
+.rp-tip { font-size: 12px; display: inline-flex; align-items: center; gap: 5px; cursor: help; }
+.rp-scroll { flex: 1; overflow: auto; padding: 28px 20px 60px; }
+
+.rp-doc { --rp-ink: #0E1522; --rp-ink2: #3D4B61; --rp-muted: #5B687D; --rp-line: #DCE3EC; --rp-soft: #F3F6FA; --rp-brand: #C2410C; --rp-brand2: #F59E0B;
+  background: #FFFFFF; color: var(--rp-ink); width: 210mm; max-width: 100%; margin: 0 auto; padding: 16mm 15mm 14mm; box-shadow: 0 10px 34px rgba(0, 0, 0, .45);
+  font-family: Inter, "Segoe UI", system-ui, sans-serif; font-size: 10pt; line-height: 1.45; }
+.rp-doc .sym, .rp-doc .num { font-family: "IBM Plex Mono", Consolas, monospace; }
+.rp-doc sub, .rp-doc sup { font-size: .72em; }
+.rp-cover { display: grid; grid-template-columns: 30mm 1fr; gap: 7mm; align-items: center; padding-bottom: 5mm; border-bottom: 2.5pt solid var(--rp-brand2); }
+.rp-brand img { width: 30mm; height: auto; display: block; }
+.rp-kicker { font-size: 8pt; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--rp-brand); }
+.rp-cover h1 { font-size: 17pt; font-weight: 700; letter-spacing: -.01em; margin: 1mm 0 1.5mm; line-height: 1.2; }
+.rp-sub { font-size: 11pt; color: var(--rp-ink2); }
+.rp-dc { margin-top: 5mm; }
+.rp-s { margin-top: 7mm; }
+.rp-doc h2 { display: flex; align-items: center; gap: 3mm; font-size: 12.5pt; font-weight: 700; padding-bottom: 1.8mm; margin: 0 0 3mm; border-bottom: 1pt solid var(--rp-line); color: var(--rp-ink); }
+.rp-n { display: inline-grid; place-items: center; min-width: 6.5mm; height: 6.5mm; border-radius: 1.2mm; background: var(--rp-ink); color: #FFFFFF; font-size: 9pt; font-family: "IBM Plex Mono", Consolas, monospace; }
+.rp-doc h3 { font-size: 8.5pt; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--rp-ink2); margin: 4.5mm 0 1.8mm; }
+.rp-p { font-size: 9.5pt; color: var(--rp-ink2); margin: 2mm 0; }
+.rp-muted { color: var(--rp-muted); }
+.rp-warn { color: #B45309; }
+.rp-t { width: 100%; border-collapse: collapse; font-size: 8.8pt; }
+.rp-t th { background: var(--rp-soft); color: var(--rp-ink2); font-size: 7.4pt; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; text-align: left; padding: 1.6mm 2mm; border-bottom: 1pt solid var(--rp-line); }
+.rp-t td { padding: 1.4mm 2mm; border-bottom: .6pt solid var(--rp-line); vertical-align: top; }
+.rp-t .r { text-align: right; white-space: nowrap; }
+.rp-t td.num { font-weight: 500; }
+.rp-dct td:nth-child(1), .rp-dct td:nth-child(3) { color: var(--rp-muted); width: 17%; white-space: nowrap; }
+.rp-dct th { display: none; }
+.rp-dct tr:first-child td { border-top: 1pt solid var(--rp-line); }
+.rp-status { border: 1pt solid; border-left-width: 4pt; border-radius: 1.2mm; padding: 3mm 4mm; }
+.rp-status .rp-st { font-size: 12pt; font-weight: 800; letter-spacing: .08em; }
+.rp-status .rp-sl { font-size: 9.5pt; margin-top: .6mm; color: var(--rp-ink2); }
+.rp-status.pass { border-color: #16A34A; background: #F0FDF4; } .rp-status.pass .rp-st { color: #15803D; }
+.rp-status.review { border-color: #D97706; background: #FFFBEB; } .rp-status.review .rp-st { color: #B45309; }
+.rp-status.fail { border-color: #DC2626; background: #FEF2F2; } .rp-status.fail .rp-st { color: #B91C1C; }
+.rp-pass { color: #15803D; font-weight: 700; white-space: nowrap; }
+.rp-review { color: #B45309; font-weight: 700; white-space: nowrap; }
+.rp-fail { color: #B91C1C; font-weight: 700; white-space: nowrap; }
+.rp-note { color: #0369A1; font-weight: 700; }
+.rp-fig { margin: 0 0 3mm; }
+.rp-fig svg { display: block; width: 100%; height: auto; border: .6pt solid var(--rp-line); border-radius: 1mm; }
+.rp-fig figcaption, .rp-chart figcaption { font-size: 8pt; color: var(--rp-muted); margin-top: 1.5mm; }
+.rp-charts { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; margin: 3mm 0; }
+.rp-chart { margin: 0; border: .6pt solid var(--rp-line); border-radius: 1mm; padding: 1.5mm; }
+.rp-chart svg { display: block; width: 100%; height: auto; }
+.rp-calc .rp-eq, .rp-eqs .rp-eq { font-family: "IBM Plex Mono", Consolas, monospace; font-size: 8.2pt; color: var(--rp-ink); }
+.rp-calc .rp-sub2 { font-family: "IBM Plex Mono", Consolas, monospace; font-size: 7.6pt; color: var(--rp-muted); margin-top: .6mm; word-break: break-word; }
+.rp-calc td:first-child { font-family: "IBM Plex Mono", Consolas, monospace; color: var(--rp-muted); }
+.rp-val .rp-act { font-size: 7.8pt; color: var(--rp-ink2); margin-top: .8mm; }
+.rp-inputs td:nth-child(7) { width: 1%; white-space: nowrap; }
+.rp-list { font-size: 9.2pt; color: var(--rp-ink2); padding-left: 5mm; margin: 2mm 0; }
+.rp-list li { margin: .9mm 0; }
+.rp-sign { margin-top: 9mm; }
+.rp-signt td { height: 13mm; vertical-align: bottom; }
+.rp-signt tr:last-child td { height: auto; font-size: 7.5pt; }
+.rp-foot { margin-top: 7mm; padding-top: 2mm; border-top: .6pt solid var(--rp-line); font-size: 7.8pt; color: var(--rp-muted); text-align: center; }
+
+@media print {
+  html.report-open body > .app, html.report-open .toasts, html.report-open .tip, html.report-open .menu, html.report-open .modal-bg { display: none !important; }
+  html.report-open, html.report-open body { background: #FFFFFF !important; height: auto !important; overflow: visible !important; }
+  html.report-open body { transform: none !important; }
+  .report-root { position: static; background: #FFFFFF; display: block; }
+  .rp-bar { display: none !important; }
+  .rp-scroll { padding: 0; overflow: visible; }
+  .rp-doc { width: auto; margin: 0; padding: 0; box-shadow: none; }
+  .rp-break { break-before: page; }
+  .rp-t tr, .rp-fig, .rp-chart, .rp-status, .rp-sign { break-inside: avoid; }
+  .rp-doc h2, .rp-doc h3 { break-after: avoid; }
+  html:not(.report-open) .hdr, html:not(.report-open) .side { display: none !important; }
+  html:not(.report-open) .app { display: block; height: auto; }
+  html:not(.report-open) .main { overflow: visible; }
+}

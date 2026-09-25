@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<title>Schematic inspection harness</title>
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="stylesheet" href="../css/views.css">
+<style>
+  #live { position: relative; }
+  body { margin: 0; padding: 12px; overflow: auto; height: auto; }
+  #meta { font: 12px/1.5 ui-monospace, Consolas, monospace; color: #A9B4C5; margin-bottom: 8px; white-space: pre-wrap; }
+  #out svg { display: block; }
+</style>
+</head>
+<body>
+<!-- Renders the parametric export drawing for the default inputs, or for inputs in the
+     hash:  inspect.html#d_p_max=30&k_th=6&theme=light&w=1600  (engineering QA only). -->
+<div id="meta"></div>
+<div id="out"></div>
+<script src="../js/engine.js"></script>
+<script src="../js/units.js"></script>
+<script src="../js/schema.js"></script>
+<script src="../js/validation.js"></script>
+<script src="../js/geometry.js"></script>
+<script src="../js/design.js"></script>
+<script src="../js/icons.js"></script>
+<script src="../js/ui-kit.js"></script>
+<script src="../js/schematic.js"></script>
+<script src="../js/flow.js"></script>
+<script>
+  var live = null;
+  function render() {
+    var inputs = JSON.parse(JSON.stringify(VJP.engine.DEFAULT_INPUTS)), opt = { theme: 'dark', w: 1600, h: 760, sys: 'si', view: 0, flow: 0, t: 0, sel: '' };
+    (location.hash || '').replace(/^#/, '').split('&').forEach(function (kv) {
+      var p = kv.split('='); if (!p[0]) return;
+      if (p[0] in opt) opt[p[0]] = isNaN(+p[1]) ? p[1] : +p[1];
+      else if (p[0] in inputs) inputs[p[0]] = isNaN(+p[1]) ? decodeURIComponent(p[1]) : +p[1];
+    });
+    document.documentElement.setAttribute('data-theme', opt.theme);
+    var D = VJP.design.evaluate(inputs, {});
+    var m = document.getElementById('meta'), o = document.getElementById('out');
+    o.innerHTML = '';
+    m.textContent = D.status.title + ' — ' + D.status.line + (D.model ? '  |  L=' + D.model.totalLength.toFixed(0) + ' mm, e=' + VJP.schematic.autoExag(D.model).toFixed(2) : '');
+    if (!D.model) return;
+    if (opt.view) {
+      // live interactive viewer (+ optional flow layer), exactly as mounted in the app
+      if (live) { live.flow && live.flow.destroy(); live.v.destroy(); }
+      var box = document.createElement('div'); box.id = 'live'; box.style.width = opt.w + 'px'; box.style.height = opt.h + 'px';
+      o.appendChild(box);
+      var v = VJP.schematic.create(box, { state: { mode: opt.flow ? 'flow' : 'engineering' } });
+      live = { v: v };
+      v.setDesign(D, VJP.ui.F(opt.sys));
+      if (opt.sel) v.select(opt.sel);
+      if (opt.flow) {
+        var fl = VJP.flow.create(v, {}); live.flow = fl;
+        fl.setDesign(D); fl.activate(true);
+        if (opt.t) { fl.t = opt.t; fl.render(); } else fl.play();
+        var inf = fl.info();
+        m.textContent += '  |  vref=' + inf.vref.toFixed(2) + ' m/s, playback 1/' + inf.playback.toFixed(1) + ', solids=' + inf.nSolids;
+      }
+      return;
+    }
+    var svg = VJP.schematic.exportSVG(D, opt.sys, { theme: opt.theme, width: opt.w, height: opt.h, project: 'VJP-QA — inspection', revision: 'Rev A', date: '25 Sep 2026' });
+    o.appendChild(svg);
+  }
+  window.addEventListener('hashchange', render);
+  render();
+</script>
+</body>
+</html>

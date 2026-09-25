@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VJP — Regression & Model Tests</title>
+<style>
+  body { font: 13px/1.5 ui-monospace, Menlo, Consolas, monospace; margin: 24px; background:#080D16; color:#dce3f5; }
+  h1 { font-size: 18px; } h2 { font-size: 14px; margin-top: 26px; color: #FDBA74; }
+  .summary { padding:10px 14px; border-radius:6px; margin:12px 0; font-size:15px; font-weight:700; }
+  .allpass { background:#0f3d2e; color:#5ef2a8; }
+  .somefail { background:#4a1220; color:#ff8a9c; }
+  table { border-collapse: collapse; width:100%; }
+  th, td { text-align:left; padding:4px 8px; border-bottom:1px solid #1e2a44; }
+  td.num { text-align:right; font-variant-numeric: tabular-nums; }
+  tr.fail td { background:#3a0d18; color:#ff9db0; }
+  tr.ok td.status { color:#5ef2a8; }
+  .path { color:#9db2e6; }
+</style>
+</head>
+<body>
+<h1>Venturi Jet Pump — Test Suites</h1>
+<div id="summary" class="summary">Running…</div>
+<h2>1 · Engine regression vs the spreadsheet (VENTURI_JET_PUMP_CALCULATOR_v4)</h2>
+<div id="s1" class="summary"></div>
+<table id="tbl1"><thead><tr><th>Cell / path</th><th>Expected (sheet)</th><th>Computed</th><th>Δrel</th><th class="status">Status</th></tr></thead><tbody></tbody></table>
+<h2>2 · Presentation-model consistency (validation · geometry · profiles · units)</h2>
+<div id="s2" class="summary"></div>
+<table id="tbl2"><thead><tr><th>Check</th><th>Detail</th><th class="status">Status</th></tr></thead><tbody></tbody></table>
+
+<script src="../js/engine.js"></script>
+<script src="engine.test.js"></script>
+<script src="../js/units.js"></script>
+<script src="../js/schema.js"></script>
+<script src="../js/validation.js"></script>
+<script src="../js/geometry.js"></script>
+<script src="../js/design.js"></script>
+<script src="model.test.js"></script>
+<script>
+  var a = VJP.test.run(), b = VJP.modelTest.run();
+  function head(id, out, what) { var el = document.getElementById(id); el.textContent = out.pass + ' / ' + out.total + ' ' + what + (out.fail ? '  —  ' + out.fail + ' FAILED' : '  —  ALL PASS ✓'); el.className = 'summary ' + (out.fail ? 'somefail' : 'allpass'); }
+  head('s1', a, 'values match'); head('s2', b, 'checks pass');
+  var total = { pass: a.pass + b.pass, fail: a.fail + b.fail, total: a.total + b.total };
+  head('summary', total, 'total');
+  var tb1 = document.querySelector('#tbl1 tbody');
+  a.results.forEach(function (r) {
+    var tr = document.createElement('tr'); tr.className = r.ok ? 'ok' : 'fail';
+    var drel = (typeof r.got === 'number' && r.expected !== 0) ? (Math.abs((r.got - r.expected) / r.expected)).toExponential(1) : '—';
+    tr.innerHTML = '<td class="path">' + r.path + '</td><td class="num">' + r.expected + '</td><td class="num">' + (typeof r.got === 'number' ? r.got : String(r.got)) + '</td><td class="num">' + drel + '</td><td class="status">' + (r.ok ? '✓' : '✗ FAIL') + '</td>';
+    tb1.appendChild(tr);
+  });
+  var tb2 = document.querySelector('#tbl2 tbody');
+  b.results.forEach(function (r) {
+    var tr = document.createElement('tr'); tr.className = r.ok ? 'ok' : 'fail';
+    tr.innerHTML = '<td class="path">' + r.path + '</td><td>' + String(r.got).replace(/</g, '&lt;') + '</td><td class="status">' + (r.ok ? '✓' : '✗ FAIL') + '</td>';
+    tb2.appendChild(tr);
+  });
+  document.title = (total.fail ? '[FAIL] ' : '[PASS] ') + document.title;
+</script>
+</body>
+</html>

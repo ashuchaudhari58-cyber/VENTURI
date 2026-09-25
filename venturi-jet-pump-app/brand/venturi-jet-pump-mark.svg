@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Venturi Jet Pump Design Studio">
+  <!-- Simplified mark for small UI sizes (favicon). Derived from the supplied logo:
+       navy disc, blue ring, steel venturi body with suction branch, cyan motive flow. -->
+  <circle cx="32" cy="32" r="28.5" fill="#0B2A5B"/>
+  <circle cx="32" cy="32" r="28.5" fill="none" stroke="#2F8BEA" stroke-width="4"/>
+  <path d="M7 23.5h9.5l10 6h9.5l20.5-4.5v14l-20.5-4.5h-3.4v15.5h-5.2V35h-0.9l-10 6H7z" fill="#D5E4F4"/>
+  <path d="M8 32h46" stroke="#38BDF8" stroke-width="2.4" stroke-linecap="round"/>
+  <circle cx="31.4" cy="44" r="1.5" fill="#B7791F"/>
+  <circle cx="32.6" cy="39.6" r="1.1" fill="#B7791F"/>
+</svg>
